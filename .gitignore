@@ -1,5 +1,15 @@
+drn/drn_d_22_000_test/
+drn/drn_d_22_000_test_color/
+drn/pretrained/
+drn/datasets/bdd100k/detection_train.json
+drn/datasets/bdd100k/seg/bdd100k_labels_images_train.json
+drn/datasets/bdd100k/seg/bdd100k_labels_images_val.json
+drn/datasets/bdd100k/seg/color_labels/
+drn/datasets/bdd100k/seg/images/
+drn/datasets/bdd100k/seg/labels/
+
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
