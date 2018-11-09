@@ -1,5 +1,5 @@
 
-#!/bin/bash
+#!/bin/sh
 
 SBATCH -J fine_tune_bdd        # Job name
 SBATCH -o fine_tune_bdd.o%j    # Name of stdout output file (%j expands to jobId)
@@ -25,4 +25,5 @@ if [ ! -d /scratch/datasets/bdd ]; then
 fi
 
 python3 segment.py train -d datasets/bdd/seg -c 19 -s 896 \
-    --arch drn_d_22 --batch-size 32 --epochs 250 --lr 0.01 --momentum 0.9 --step 100 
+    --arch drn_d_22 --batch-size 32 --epochs 250 --lr 0.01 --momentum 0.9 \
+    --step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
