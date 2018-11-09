@@ -1,8 +1,8 @@
 drn/drn_d_22_000_test/
 drn/drn_d_22_000_test_color/
 drn/pretrained/
-drn/datasets/bdd/100k/
-drn/datasets/bdd/detection_train.json
+drn/datasets/bdd/classify/100k/
+drn/datasets/bdd/classify/detection_train.json
 drn/datasets/bdd/seg/bdd100k_labels_images_train.json
 drn/datasets/bdd/seg/bdd100k_labels_images_val.json
 drn/datasets/bdd/seg/color_labels/

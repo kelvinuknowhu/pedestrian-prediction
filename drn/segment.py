@@ -35,6 +35,9 @@ FORMAT = "[%(asctime)-15s %(filename)s:%(lineno)d %(funcName)s] %(message)s"
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+sh = logging.StreamHandler(stream=sys.stdout)
+sh.setLevel(logging.DEBUG)
+logger.addHandler(sh)
 
 
 CITYSCAPE_PALETTE = np.asarray([
@@ -338,8 +341,6 @@ def train_seg(args):
     batch_size = args.batch_size
     num_workers = args.workers
     crop_size = args.crop_size
-
-    print(' '.join(sys.argv))
 
     for k, v in args.__dict__.items():
         print(k, ':', v)
@@ -726,7 +727,6 @@ def parse_args():
 
     assert args.classes > 0
 
-    print(' '.join(sys.argv))
     print(args)
 
     if args.bn_sync:
