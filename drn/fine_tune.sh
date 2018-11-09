@@ -1,5 +1,4 @@
-
-#!/bin/sh
+#!/bin/bash
 
 SBATCH -J fine_tune_bdd        # Job name
 SBATCH -o fine_tune_bdd.o%j    # Name of stdout output file (%j expands to jobId)
