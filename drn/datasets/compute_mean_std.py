@@ -25,9 +25,9 @@ def compute_mean_std(data_dir, list_dir):
 def parse_args():
     parser = argparse.ArgumentParser(
         description='Compute mean and std of a dataset.')
-    parser.add_argument('data_dir', default='./', required=True,
+    parser.add_argument('--data-dir', default='./', required=True,
                         help='data folder where train_images.txt resides.')
-    parser.add_argument('list_dir', default=None, required=False,
+    parser.add_argument('--list-dir', default=None, required=False,
                         help='data folder where train_images.txt resides.')
     args = parser.parse_args()
     if args.list_dir is None:
