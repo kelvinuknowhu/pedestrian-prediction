@@ -23,6 +23,10 @@ if [ ! -d /scratch/datasets/bdd ]; then
   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/bdd /scratch/datasets
 fi
 
-python3 segment.py train -d /scratch/datasets/bdd/seg -c 19 -s 896 \
-    --arch drn_d_22 --batch-size 32 --epochs 250 --lr 0.01 --momentum 0.9 \
-    --step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
+# if [ ! -d /scratch/datasets/mapillary ]; then
+#   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
+# fi
+
+python3 segment.py train -d /scratch/datasets/bdd -c 19 -s 896 \
+--arch drn_d_22 --batch-size 32 --epochs 250 --lr 0.01 --momentum 0.9 \
+--step 100 --pretrained pretrained/drn_d_22_cityscapes.pth

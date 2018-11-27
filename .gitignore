@@ -1,14 +1,13 @@
-drn/drn_d_22_000_test/
-drn/drn_d_22_000_test_color/
 drn/pretrained/
-drn/datasets/bdd/color_labels/
 drn/datasets/bdd/images/
 drn/datasets/bdd/labels/
+drn/datasets/bdd/color_labels/
 drn/datasets/cityscapes/gtFine/
 drn/datasets/mapillary/training/
 drn/datasets/mapillary/validation/
 drn/datasets/mapillary/testing/
-
+drn/drn_d_22_000_test/
+drn/drn_d_22_000_test_color/
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
