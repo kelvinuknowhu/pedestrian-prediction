@@ -13,7 +13,7 @@
                                                # --gres=gpu:1080ti:1 - Use 1 GTX 1080TI GPU
 
 # OPTIONAL: Uncomment this if you're using an anaconda environment
-source /home/sh2442/anaconda3/etc/profile.d/conda.sh
+. /home/sh2442/anaconda3/etc/profile.d/conda.sh
 conda activate pytorch
 
 

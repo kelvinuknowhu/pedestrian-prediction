@@ -1,14 +1,14 @@
 drn/drn_d_22_000_test/
 drn/drn_d_22_000_test_color/
 drn/pretrained/
-drn/datasets/bdd/classify/100k/
-drn/datasets/bdd/classify/detection_train.json
-drn/datasets/bdd/seg/bdd100k_labels_images_train.json
-drn/datasets/bdd/seg/bdd100k_labels_images_val.json
-drn/datasets/bdd/seg/color_labels/
-drn/datasets/bdd/seg/images/
-drn/datasets/bdd/seg/labels/
+drn/datasets/bdd/color_labels/
+drn/datasets/bdd/images/
+drn/datasets/bdd/labels/
 drn/datasets/cityscapes/gtFine/
+drn/datasets/mapillary/training/
+drn/datasets/mapillary/validation/
+drn/datasets/mapillary/testing/
+
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/

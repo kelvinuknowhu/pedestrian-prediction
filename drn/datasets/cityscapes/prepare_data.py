@@ -41,7 +41,7 @@ Label = namedtuple( 'Label' , [
                     # during evaluations or not
 
     'color'       , # The color of this label
-    ] )
+])
 
 
 labels = [
@@ -117,7 +117,7 @@ def prepare_cityscape_submission(in_dir):
 
 
 def prepare_cityscape_training(in_dir):
-    for root, dirs, filenames in os.walk(in_dir):
+    for root, _, filenames in os.walk(in_dir):
         for name in filenames:
             parts = name.split('_')
             if parts[-1] != 'labelIds.png':

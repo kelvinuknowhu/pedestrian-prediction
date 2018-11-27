@@ -296,7 +296,8 @@ def train(train_loader, model, criterion, optimizer, epoch,
         if type(criterion) in [torch.nn.modules.loss.L1Loss,
                                torch.nn.modules.loss.MSELoss]:
             target = target.float()
-
+        print("input", input.shape)
+        print("target", target.shape)
         input = input.cuda()
         target = target.cuda(non_blocking=True)
         input_var = torch.autograd.Variable(input)
@@ -321,6 +322,7 @@ def train(train_loader, model, criterion, optimizer, epoch,
         batch_time.update(time.time() - end)
         end = time.time()
 
+        print("TESTING TESTING TESTING TESTING")
         if i % print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}]\t'
                         'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'

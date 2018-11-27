@@ -5,8 +5,8 @@ from PIL import Image
 from os import path as osp
 
 
-def compute_mean_std(data_dir, list_dir):
-    image_list_path = osp.join(list_dir, 'train_images.txt')
+def compute_mean_std(data_dir):
+    image_list_path = osp.join(data_dir, 'train_images.txt')
     image_list = [line.strip() for line in open(image_list_path, 'r')]
     np.random.shuffle(image_list)
     pixels = []
@@ -27,18 +27,14 @@ def parse_args():
         description='Compute mean and std of a dataset.')
     parser.add_argument('--data-dir', default='./', required=True,
                         help='data folder where train_images.txt resides.')
-    parser.add_argument('--list-dir', default=None, required=False,
-                        help='data folder where train_images.txt resides.')
     args = parser.parse_args()
-    if args.list_dir is None:
-        args.list_dir = args.data_dir
+    
     return args
 
 
 def main():
     args = parse_args()
-    compute_mean_std(args.data_dir, args.list_dir)
-
+    compute_mean_std(args.data_dir)
 
 if __name__ == '__main__':
     main()

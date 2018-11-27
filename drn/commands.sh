@@ -15,5 +15,5 @@ cat /proc/driver/nvidia/gpus/0000\:02\:00.0/information
 
 # Submit a batch (non-interactive) job
 sbatch -J fine_tune_bdd -o fine_tune_bdd.o%j \
-    --nodelist=hinton --partition=cuvl --requeue
+    --nodelist=nikola-compute06  --partition=thorsten --requeue \
     -n 2 --gres=gpu:2 --mem=10000 fine_tune.sh
