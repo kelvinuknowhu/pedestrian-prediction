@@ -14,4 +14,4 @@ scp [file] sh2442@graphite.coecis.cornell.edu:/home/sh2442
 cat /proc/driver/nvidia/gpus/0000\:02\:00.0/information 
 
 # Submit a batch (non-interactive) job
-sbatch -J bdd_fine_tune -o bdd_fine_tune.o%j --nodelist=hinton --partition=cuvl --requeue -n 2 --gres=gpu:2 --mem=64G fine_tune.sh
+sbatch -J fine_tune_bdd -o fine_tune_bdd.o%j --nodelist=hinton --partition=cuvl --requeue -n 2 --gres=gpu:2 --mem=64G fine_tune.sh
