@@ -27,10 +27,14 @@ fi
 #   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
 # fi
 
-# python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
-# --arch drn_d_22 --batch-size 8 --epochs 10 --lr 0.01 --momentum 0.9 \
-# --step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
-
 python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
---arch drn_d_105 --random-scale 2 --random-rotate 10 --batch-size 16 --epochs 250 --lr 0.01 --momentum 0.9 \
---workers 16 --lr-mode poly --bn-sync
+--arch drn_d_22 --batch-size 8 --epochs 250 --lr 0.01 --momentum 0.9 \
+--step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
+
+# python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
+# --arch drn_d_38 --batch-size 8 --epochs 250 --lr 0.01 --momentum 0.9 \
+# --step 100 --pretrained pretrained/drn_d_38_cityscapes.pth
+
+# python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
+# --arch drn_d_105 --random-scale 2 --random-rotate 10 --batch-size 16 --epochs 250 --lr 0.01 --momentum 0.9 \
+# --workers 16 --lr-mode poly --bn-sync
