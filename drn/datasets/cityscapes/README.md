@@ -1,4 +1,5 @@
-## Prepare Cityscapes training data
+# Cityscapes Dataset
+## Prepare training data
 
 ### Step 1
 
