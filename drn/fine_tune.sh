@@ -19,13 +19,14 @@ conda activate pytorch
 
 # OPTIONAL: Uncomment this if you need to copy a dataset over to scratch
 #           This checks to see if the dataset already exists
-if [ ! -d /scratch/datasets/bdd ]; then
-  cp -r /home/sh2442/pedestrian-prediction/drn/datasets/bdd /scratch/datasets
+# if [ ! -d /scratch/datasets/bdd ]; then
+#   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/bdd /scratch/datasets
+# fi
+
+if [ ! -d /scratch/datasets/mapillary ]; then
+  cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
 fi
 
-# if [ ! -d /scratch/datasets/mapillary ]; then
-#   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
-# fi
 
 # Fine tune on BDD
 # python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
@@ -33,10 +34,6 @@ fi
 # --step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
 
 # Fine tune on Mapillary (Crosswalk)
-python3 segment.py train --data-dir /scratch/datasets/bdd --classes 2 --crop-size 840 \
+python3 segment.py train --data-dir /scratch/datasets/mapillary --classes 2 --crop-size 840 \
 --arch drn_d_38 --batch-size 8 --epochs 250 --lr 0.01 --momentum 0.9 \
 --step 100 --pretrained pretrained/drn_d_38_cityscapes.pth
-
-# python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
-# --arch drn_d_105 --random-scale 2 --random-rotate 10 --batch-size 16 --epochs 250 --lr 0.01 --momentum 0.9 \
-# --workers 16 --lr-mode poly --bn-sync
