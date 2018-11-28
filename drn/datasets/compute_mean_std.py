@@ -26,7 +26,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='Compute mean and std of a dataset.')
     parser.add_argument('--data-dir', default='./', required=True,
-                        help='data folder where train_images.txt resides.')
+                        help='Need to specify the data folder where train_images.txt resides.')
     args = parser.parse_args()
     
     return args

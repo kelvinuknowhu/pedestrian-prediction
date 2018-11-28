@@ -1,4 +1,6 @@
 # Activate pytorch environment on Graphite
+. /home/sh2442/anaconda3/etc/profile.d/conda.sh
+conda activate pytorch
 
 # Compute mean and std
 python compute_mean_std.py --data-dir bdd/seg
