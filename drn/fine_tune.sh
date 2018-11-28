@@ -36,4 +36,4 @@ fi
 # Fine tune on Mapillary (Crosswalk)
 python3 segment.py train --data-dir /scratch/datasets/mapillary --classes 2 --crop-size 840 \
 --arch drn_d_38 --batch-size 8 --epochs 250 --lr 0.01 --momentum 0.9 \
---step 100 --pretrained pretrained/drn_d_38_cityscapes.pth
+--step 100

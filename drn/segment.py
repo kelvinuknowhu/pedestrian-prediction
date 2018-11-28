@@ -351,6 +351,7 @@ def train_seg(args):
         if torch.cuda.is_available():
             single_model.load_state_dict(torch.load(args.pretrained))
         else:
+            print("CUDA not available!")
             single_model.load_state_dict(torch.load(args.pretrained, map_location='cpu'))
     model = torch.nn.DataParallel(single_model).cuda()
     criterion = nn.NLLLoss(ignore_index=255)
@@ -630,7 +631,8 @@ def test_seg(args):
     if args.pretrained:
         if torch.cuda.is_available():
             single_model.load_state_dict(torch.load(args.pretrained))
-        else:    
+        else:
+            print("CUDA not available!")    
             state_dict = torch.load(args.pretrained, map_location='cpu')
             if 'state_dict' in state_dict:
                 state_dict = state_dict['state_dict']
@@ -643,6 +645,7 @@ def test_seg(args):
     if torch.cuda.is_available():
         model = torch.nn.DataParallel(single_model).cuda()
     else:
+        print("CUDA not available!")
         model = single_model
 
     data_dir = args.data_dir
