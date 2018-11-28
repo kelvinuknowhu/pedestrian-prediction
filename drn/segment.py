@@ -425,7 +425,7 @@ def train_seg(args):
 
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
-        checkpoint_path = 'checkpoint_latest.pth.tar'
+        checkpoint_path = args.arch + '_checkpoint_latest.pth.tar'
         save_checkpoint({
             'epoch': epoch + 1,
             'arch': args.arch,
