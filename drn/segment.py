@@ -209,36 +209,37 @@ def validate(val_loader, model, criterion, eval_score=None, print_freq=10):
     model.eval()
 
     end = time.time()
-    for i, (input, target) in enumerate(val_loader):
+    for i, (input_data, target) in enumerate(val_loader):
         if type(criterion) in [torch.nn.modules.loss.L1Loss,
                                torch.nn.modules.loss.MSELoss]:
             target = target.float()
-        input = input.cuda()
+        input_data = input_data.cuda()
         target = target.cuda(non_blocking=True)
-        input_var = torch.autograd.Variable(input, volatile=True)
-        target_var = torch.autograd.Variable(target, volatile=True)
+        with torch.no_grad():
+            input_var = torch.autograd.Variable(input_data)
+            target_var = torch.autograd.Variable(target)
 
-        # compute output
-        output = model(input_var)[0]
-        loss = criterion(output, target_var)
+            # compute output
+            output = model(input_var)[0]
+            loss = criterion(output, target_var)
 
-        # measure accuracy and record loss
-        # prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
-        losses.update(loss.data[0], input.size(0))
-        if eval_score is not None:
-            score.update(eval_score(output, target_var), input.size(0))
+            # measure accuracy and record loss
+            # prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+            losses.update(loss.data.item(), input_data.size(0))
+            if eval_score is not None:
+                score.update(eval_score(output, target_var), input_data.size(0))
 
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
+            # measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
 
-        if i % print_freq == 0:
-            logger.info('Test: [{0}/{1}]\t'
-                        'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                        'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                        'Score {score.val:.3f} ({score.avg:.3f})'.format(
-                            i, len(val_loader), batch_time=batch_time, loss=losses,
-                            score=score))
+            if i % print_freq == 0:
+                logger.info('Test: [{0}/{1}]\t'
+                            'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                            'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                            'Score {score.val:.3f} ({score.avg:.3f})'.format(
+                                i, len(val_loader), batch_time=batch_time, loss=losses,
+                                score=score))
 
     logger.info(' * Score {top1.avg:.3f}'.format(top1=score))
 
@@ -274,7 +275,7 @@ def accuracy(output, target):
     correct = correct[target != 255]
     correct = correct.view(-1)
     score = correct.float().sum(0).mul(100.0 / correct.size(0))
-    return score.data[0]
+    return score.data.item()
 
 
 def train(train_loader, model, criterion, optimizer, epoch,
@@ -289,18 +290,16 @@ def train(train_loader, model, criterion, optimizer, epoch,
 
     end = time.time()
 
-    for i, (input, target) in enumerate(train_loader):
+    for i, (input_data, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
 
         if type(criterion) in [torch.nn.modules.loss.L1Loss,
                                torch.nn.modules.loss.MSELoss]:
             target = target.float()
-        print("input", input.shape)
-        print("target", target.shape)
-        input = input.cuda()
+        input_data = input_data.cuda()
         target = target.cuda(non_blocking=True)
-        input_var = torch.autograd.Variable(input)
+        input_var = torch.autograd.Variable(input_data)
         target_var = torch.autograd.Variable(target)
 
         # compute output
@@ -309,9 +308,10 @@ def train(train_loader, model, criterion, optimizer, epoch,
 
         # measure accuracy and record loss
         # prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
-        losses.update(loss.data[0], input.size(0))
+        # losses.update(loss.data[0], input_data.size(0))
+        losses.update(loss.data.item(), input_data.size(0))
         if eval_score is not None:
-            scores.update(eval_score(output, target_var), input.size(0))
+            scores.update(eval_score(output, target_var), input_data.size(0))
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
@@ -346,23 +346,24 @@ def train_seg(args):
     for k, v in args.__dict__.items():
         print(k, ':', v)
 
-    single_model = DRNSeg(args.arch, args.classes, None,
-                          pretrained=True)
+    single_model = DRNSeg(args.arch, args.classes, None, pretrained=True)
     if args.pretrained:
-        single_model.load_state_dict(torch.load(args.pretrained))
+        if torch.cuda.is_available():
+            single_model.load_state_dict(torch.load(args.pretrained))
+        else:
+            single_model.load_state_dict(torch.load(args.pretrained, map_location='cpu'))
     model = torch.nn.DataParallel(single_model).cuda()
-    criterion = nn.NLLLoss2d(ignore_index=255)
+    criterion = nn.NLLLoss(ignore_index=255)
 
     criterion.cuda()
 
     # Data loading code
     data_dir = args.data_dir
     info = json.load(open(join(data_dir, 'info.json'), 'r'))
-    normalize = transforms.Normalize(mean=info['mean'],
-                                     std=info['std'])
+    normalize = transforms.Normalize(mean=info['mean'], std=info['std'])
     t = []
     if args.random_rotate > 0:
-        t.append(transforms.RandomRotate(args.random_rotate))
+        t.append(transforms.RandomRotate(args.frandom_rotate))
     if args.random_scale > 0:
         t.append(transforms.RandomScale(args.random_scale))
     t.extend([transforms.RandomCrop(crop_size),
@@ -500,27 +501,28 @@ def test(eval_data_loader, model, num_classes,
     hist = np.zeros((num_classes, num_classes))
     for iter, (image, label, name) in enumerate(eval_data_loader):
         data_time.update(time.time() - end)
-        image_var = Variable(image, requires_grad=False, volatile=True)
-        final = model(image_var)[0]
-        _, pred = torch.max(final, 1)
-        pred = pred.cpu().data.numpy()
-        batch_time.update(time.time() - end)
-        if save_vis:
-            save_output_images(pred, name, output_dir)
-            save_colorful_images(
-                pred, name, output_dir + '_color',
-                TRIPLET_PALETTE if num_classes == 3 else CITYSCAPE_PALETTE)
-        if has_gt:
-            label = label.numpy()
-            hist += fast_hist(pred.flatten(), label.flatten(), num_classes)
-            logger.info('===> mAP {mAP:.3f}'.format(
-                mAP=round(np.nanmean(per_class_iu(hist)) * 100, 2)))
-        end = time.time()
-        logger.info('Eval: [{0}/{1}]\t'
-                    'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                    'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                    .format(iter, len(eval_data_loader), batch_time=batch_time,
-                            data_time=data_time))
+        with torch.no_grad():
+            image_var = Variable(image, requires_grad=False)
+            final = model(image_var)[0]
+            _, pred = torch.max(final, 1)
+            pred = pred.cpu().data.numpy()
+            batch_time.update(time.time() - end)
+            if save_vis:
+                save_output_images(pred, name, output_dir)
+                save_colorful_images(
+                    pred, name, output_dir + '_color',
+                    TRIPLET_PALETTE if num_classes == 3 else CITYSCAPE_PALETTE)
+            if has_gt:
+                label = label.numpy()
+                hist += fast_hist(pred.flatten(), label.flatten(), num_classes)
+                logger.info('===> mAP {mAP:.3f}'.format(
+                    mAP=round(np.nanmean(per_class_iu(hist)) * 100, 2)))
+            end = time.time()
+            logger.info('Eval: [{0}/{1}]\t'
+                        'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                        'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                        .format(iter, len(eval_data_loader), batch_time=batch_time,
+                                data_time=data_time))
     if has_gt:  # val
         ious = per_class_iu(hist) * 100
         logger.info(' '.join('{:.03f}'.format(i) for i in ious))
@@ -584,9 +586,10 @@ def test_ms(eval_data_loader, model, num_classes, scales,
         # pdb.set_trace()
         outputs = []
         for image in images:
-            image_var = Variable(image, requires_grad=False, volatile=True)
-            final = model(image_var)[0]
-            outputs.append(final.data)
+            with torch.no_grad():
+                image_var = Variable(image, requires_grad=False)
+                final = model(image_var)[0]
+                outputs.append(final.data)
         final = sum([resize_4d_tensor(out, w, h) for out in outputs])
         # _, pred = torch.max(torch.from_numpy(final), 1)
         # pred = pred.cpu().numpy()
@@ -607,7 +610,8 @@ def test_ms(eval_data_loader, model, num_classes, scales,
                     'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
                     .format(iter, len(eval_data_loader), batch_time=batch_time,
                             data_time=data_time))
-    if has_gt:  # val
+    # validation
+    if has_gt:
         ious = per_class_iu(hist) * 100
         logger.info(' '.join('{:.03f}'.format(i) for i in ious))
         return round(np.nanmean(ious), 2)
@@ -624,7 +628,18 @@ def test_seg(args):
     single_model = DRNSeg(args.arch, args.classes, pretrained_model=None,
                           pretrained=False)
     if args.pretrained:
-        single_model.load_state_dict(torch.load(args.pretrained))
+        if torch.cuda.is_available():
+            single_model.load_state_dict(torch.load(args.pretrained))
+        else:    
+            state_dict = torch.load(args.pretrained, map_location='cpu')
+            if 'state_dict' in state_dict:
+                state_dict = state_dict['state_dict']
+                new_state_dict = {}
+                for key in state_dict:
+                    new_key = '.'.join(key.split('.')[1:])
+                    new_state_dict[new_key] = state_dict[key]
+                state_dict = new_state_dict
+            single_model.load_state_dict(state_dict)
     if torch.cuda.is_available():
         model = torch.nn.DataParallel(single_model).cuda()
     else:
@@ -687,12 +702,12 @@ def parse_args():
     # Training settings
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('cmd', choices=['train', 'test'])
-    parser.add_argument('-d', '--data-dir', default=None, required=True)
-    parser.add_argument('-l', '--list-dir', default=None,
+    parser.add_argument('--data-dir', default=None, required=True)
+    parser.add_argument('--list-dir', default=None,
                         help='List dir to look for train_images.txt etc. '
                              'It is the same with --data-dir if not set.')
-    parser.add_argument('-c', '--classes', default=0, type=int)
-    parser.add_argument('-s', '--crop-size', default=0, type=int)
+    parser.add_argument('--classes', default=0, type=int)
+    parser.add_argument('--crop-size', default=0, type=int)
     parser.add_argument('--step', type=int, default=200)
     parser.add_argument('--arch')
     parser.add_argument('--batch-size', type=int, default=64, metavar='N',
@@ -706,7 +721,7 @@ def parse_args():
                         help='SGD momentum (default: 0.9)')
     parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float,
                         metavar='W', help='weight decay (default: 1e-4)')
-    parser.add_argument('-e', '--evaluate', dest='evaluate',
+    parser.add_argument('--evaluate', dest='evaluate',
                         action='store_true',
                         help='evaluate model on validation set')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
@@ -714,7 +729,7 @@ def parse_args():
     parser.add_argument('--pretrained', dest='pretrained',
                         default='', type=str, metavar='PATH',
                         help='use pre-trained model')
-    parser.add_argument('-j', '--workers', type=int, default=8)
+    parser.add_argument('--workers', type=int, default=8)
     parser.add_argument('--load-release', dest='load_rel', default=None)
     parser.add_argument('--phase', default='val')
     parser.add_argument('--random-scale', default=0, type=float)
