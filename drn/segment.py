@@ -363,7 +363,7 @@ def train_seg(args):
     normalize = transforms.Normalize(mean=info['mean'], std=info['std'])
     t = []
     if args.random_rotate > 0:
-        t.append(transforms.RandomRotate(args.frandom_rotate))
+        t.append(transforms.RandomRotate(args.random_rotate))
     if args.random_scale > 0:
         t.append(transforms.RandomScale(args.random_scale))
     t.extend([transforms.RandomCrop(crop_size),
