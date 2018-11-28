@@ -11,6 +11,7 @@ def compute_mean_std(data_dir):
     np.random.shuffle(image_list)
     pixels = []
     for image_path in image_list[:500]:
+        print(image_path)
         image = Image.open(path.join(data_dir, image_path), 'r')
         pixels.append(np.asarray(image).reshape(-1, 3))
     pixels = np.vstack(pixels)
