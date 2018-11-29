@@ -14,7 +14,6 @@ def compute_mean_std(data_dir):
     # pixels_list = []
     N = 0
     num = 500
-    print(len(image_list))
     for i, image_path in enumerate(image_list[:num]):
         print("[{}/{}] {}".format(i + 1, num, image_path))
         image = Image.open(path.join(data_dir, image_path), 'r')
