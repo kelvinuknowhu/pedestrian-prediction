@@ -16,8 +16,10 @@ scp [file] Kelvin@[ip-address]:~/Downloads
 cat /proc/driver/nvidia/gpus/0000\:02\:00.0/information 
 
 # Submit a batch (non-interactive) job
-sbatch --job-name=bdd_fine_tune --output=bdd_fine_tune.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G fine_tune.sh
+sbatch --job-name=bdd --output=bdd.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G fine_tune.sh
 
-sbatch --job-name=mapillary --output=mapillary.o%j --nodelist=harpo --partition=kilian --requeue --gres=gpu:2 --mem=64G fine_tune.sh
+sbatch --job-name=mapillary --output=mapillary.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G fine_tune.sh
+
+sbatch --job-name=bdd --output=bdd.o%j --nodelist=harpo --partition=kilian --requeue --gres=gpu:2 --mem=64G fine_tune.sh
 
 sbatch --job-name=mapillary --output=mapillary.o%j --nodelist=nikola-compute02 --partition=default_gpu --requeue --gres=gpu:2 --mem=64G fine_tune.sh
