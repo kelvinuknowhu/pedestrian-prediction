@@ -19,13 +19,13 @@ conda activate pytorch
 
 # OPTIONAL: Uncomment this if you need to copy a dataset over to scratch
 #           This checks to see if the dataset already exists
-# if [ ! -d /scratch/datasets/bdd ]; then
-#   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/bdd /scratch/datasets
-# fi
-
-if [ ! -d /scratch/datasets/mapillary ]; then
-  cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
+if [ ! -d /scratch/datasets/bdd ]; then
+  cp -r /home/sh2442/pedestrian-prediction/drn/datasets/bdd /scratch/datasets
 fi
+
+# if [ ! -d /scratch/datasets/mapillary ]; then
+#   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
+# fi
 
 
 # Generate info.json for Mapillary training images
