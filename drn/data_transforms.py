@@ -15,8 +15,7 @@ class RandomCrop(object):
 
     def __call__(self, image, label, *args):
         assert label is None or image.size == label.size, \
-            "image and label doesn't have the same size {} / {}".format(
-                image.size, label.size)
+            "Image and label doesn't have the same size {} / {}".format(image.size, label.size)
 
         w, h = image.size
         tw, th = self.size

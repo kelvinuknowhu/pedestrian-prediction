@@ -373,8 +373,7 @@ def train_seg(args):
               transforms.ToTensor(),
               normalize])
     train_loader = torch.utils.data.DataLoader(
-        SegList(data_dir, 'train', transforms.Compose(t),
-                list_dir=args.list_dir),
+        SegList(data_dir, 'train', transforms.Compose(t), list_dir=args.list_dir),
         batch_size=batch_size, shuffle=True, num_workers=num_workers,
         pin_memory=True, drop_last=True
     )
