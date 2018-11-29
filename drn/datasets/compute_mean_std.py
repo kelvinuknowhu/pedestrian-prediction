@@ -8,7 +8,7 @@ from os import path
 def compute_mean_std(data_dir):
     image_list_path = path.join(data_dir, 'train_images.txt')
     image_list = [line.strip() for line in open(image_list_path, 'r')]
-    # np.random.shuffle(image_list)
+    np.random.shuffle(image_list)
     pixels_sum = np.zeros(3, dtype=np.float_)
     squares_sum = np.zeros(3, dtype=np.float_)
     # pixels_list = []
