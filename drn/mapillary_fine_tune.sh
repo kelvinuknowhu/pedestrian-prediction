@@ -16,22 +16,12 @@
 . /home/sh2442/anaconda3/etc/profile.d/conda.sh
 conda activate pytorch
 
-# Check if BDD dataset exists
-# if [ ! -d /scratch/datasets/bdd ]; then
-#   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/bdd /scratch/datasets
-# fi
-
-# Fine tune on BDD
-# python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
-# --arch drn_d_22 --batch-size 8 --epochs 250 --lr 0.01 --momentum 0.9 \
-# --step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
-
 # Check if Mapillary dataset exists
 if [ ! -d /scratch/datasets/mapillary ]; then
   cp -r /home/sh2442/pedestrian-prediction/drn/datasets/mapillary /scratch/datasets
 fi
 
 # Fine tune on Mapillary (Crosswalk)
-python3 segment.py train --data-dir /scratch/datasets/mapillary --classes 2 --crop-size 840 \
+python3 segment_mapillary.py train --data-dir /scratch/datasets/mapillary --classes 2 --crop-size 840 \
 --arch drn_d_38 --batch-size 8 --epochs 150 --lr 0.01 --momentum 0.9 \
 --step 100
