@@ -334,7 +334,7 @@ def train(train_loader, model, criterion, optimizer, epoch,
 def save_checkpoint(state, is_best, filename):
     torch.save(state, filename)
     if is_best:
-        best_name = state.arch + '_model_best.pth'
+        best_name = state['arch'] + '_model_best.pth'
         shutil.copyfile(filename, best_name)
 
 
