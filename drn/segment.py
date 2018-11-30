@@ -355,8 +355,8 @@ def train_seg(args):
             print("CUDA not available!")
             single_model.load_state_dict(torch.load(args.pretrained, map_location='cpu'))
     model = torch.nn.DataParallel(single_model).cuda()
+    # TODO: Add in weights [1.0, 0.1]
     criterion = nn.NLLLoss(ignore_index=255)
-
     criterion.cuda()
 
     # Data loading code
@@ -525,7 +525,8 @@ def test(eval_data_loader, model, num_classes,
                         'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
                         .format(iter, len(eval_data_loader), batch_time=batch_time,
                                 data_time=data_time))
-    if has_gt:  # val
+    # Validation
+    if has_gt:
         ious = per_class_iu(hist) * 100
         logger.info(' '.join('{:.03f}'.format(i) for i in ious))
         return round(np.nanmean(ious), 2)

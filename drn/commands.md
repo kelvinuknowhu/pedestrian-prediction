@@ -6,7 +6,9 @@ conda activate pytorch
 python compute_mean_std.py --data-dir bdd/seg
 
 # Test a pretrained model on Cityscapes/BDD
-python segment.py test --data-dir datasets/bdd --classes 19 --arch drn_d_22 --pretrained pretrained/model_best.pth.tar --phase test --batch-size 1
+python segment.py test --data-dir datasets/bdd --classes 19 --arch drn_d_22 --pretrained pretrained/bdd_model_best.pth --phase test --batch-size 1
+
+python segment.py test --data-dir datasets/mapillary --classes 2 --arch drn_d_38 --pretrained pretrained/mapillary_model_best.pth --phase test --batch-size 1
 
 # Move files to Graphite
 scp [file] sh2442@graphite.coecis.cornell.edu:/home/sh2442
