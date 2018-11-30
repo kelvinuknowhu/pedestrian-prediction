@@ -356,7 +356,7 @@ def train_seg(args):
             single_model.load_state_dict(torch.load(args.pretrained, map_location='cpu'))
     model = torch.nn.DataParallel(single_model).cuda()
     # TODO: Add in weights [1.0, 0.1]
-    criterion = nn.NLLLoss(ignore_index=255)
+    criterion = nn.NLLLoss(weight=torch.tensor([1.0, 0.1]), ignore_index=255)
     criterion.cuda()
 
     # Data loading code

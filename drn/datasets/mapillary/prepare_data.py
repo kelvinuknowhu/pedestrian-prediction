@@ -103,17 +103,27 @@ def prepare_mapillary_training(label_dir, out_dir):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
     length = len(os.listdir(label_dir))
+    count = 0
     for i, file_name in enumerate(os.listdir(label_dir)):
-        image = Image.open(os.path.join(label_dir, file_name))
-        id_map = label_to_train_id(image)
-        out_path = os.path.join(out_dir, file_name)
-        print('({i}/{length}) Writing to {out_path}'.format(i=i+1, length=length, out_path=out_path))
-        id_map.save(out_path)
+        image = np.array(Image.open(os.path.join(label_dir, file_name)))
+        if is_valid(image):
+            id_map = label_to_train_id(image)
+            out_path = os.path.join(out_dir, file_name)
+            print('({i}/{length}) Writing to {out_path}'.format(i=i+1, length=length, out_path=out_path))
+            id_map.save(out_path)
+            count += 1
+        else:
+            print('({i}/{length}) Skipping'.format(i=i+1, length=length))
+    print('Finish preparing {} crosswalk masks'.format(count))
 
+
+def is_valid(array):
+    threshold = 128
+    num_pixels = np.sum(array == 0)
+    return num_pixels > threshold
 
 # Convert label ids in a label mask to corresponding train ids
-def label_to_train_id(image):
-    array = np.array(image)
+def label_to_train_id(array):
     out_array = np.empty_like(array)
     for l in labels:
         out_array[array == l.id] = l.trainId
