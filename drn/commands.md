@@ -18,6 +18,9 @@ cat /proc/driver/nvidia/gpus/0000\:02\:00.0/information
 # Submit a batch (non-interactive) job
 sbatch --job-name=bdd --output=bdd.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G bdd_fine_tune.sh
 
+sbatch --job-name=bdd --output=bdd.o%j --nodelist=harpo --partition=kilian --requeue --cpus-per-task=2 --gres=gpu:1 --mem=64G bdd_fine_tune.sh
+
+sbatch --job-name=bdd --output=bdd.o%j --nodelist=nikola-compute02 --partition=default_gpu --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G bdd_fine_tune.sh
+
 sbatch --job-name=mapillary --output=mapillary.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G mapillary_fine_tune.sh
 
-sbatch --job-name=bdd --output=bdd.o%j --nodelist=nikola-compute06 --partition=default_gpu --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G bdd_fine_tune.sh

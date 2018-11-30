@@ -630,18 +630,18 @@ def test_seg(args):
     single_model = DRNSeg(args.arch, args.classes, pretrained_model=None,
                           pretrained=False)
     if args.pretrained:
+        state_dict = torch.load(args.pretrained, map_location='cpu')
+        if 'state_dict' in state_dict:
+            state_dict = state_dict['state_dict']
+            new_state_dict = {}
+            for key in state_dict:
+                new_key = '.'.join(key.split('.')[1:])
+                new_state_dict[new_key] = state_dict[key]
+            state_dict = new_state_dict
         if torch.cuda.is_available():
-            single_model.load_state_dict(torch.load(args.pretrained))
+            single_model.load_state_dict(state_dict)
         else:
             print("CUDA not available!")    
-            state_dict = torch.load(args.pretrained, map_location='cpu')
-            if 'state_dict' in state_dict:
-                state_dict = state_dict['state_dict']
-                new_state_dict = {}
-                for key in state_dict:
-                    new_key = '.'.join(key.split('.')[1:])
-                    new_state_dict[new_key] = state_dict[key]
-                state_dict = new_state_dict
             single_model.load_state_dict(state_dict)
     if torch.cuda.is_available():
         model = torch.nn.DataParallel(single_model).cuda()
