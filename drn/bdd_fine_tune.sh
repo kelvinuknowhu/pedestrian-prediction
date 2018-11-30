@@ -24,4 +24,4 @@ fi
 # Fine tune on BDD
 python3 segment.py train --data-dir /scratch/datasets/bdd --classes 19 --crop-size 840 \
 --arch drn_d_22 --batch-size 8 --epochs 250 --lr 0.01 --momentum 0.9 \
---step 100 --pretrained pretrained/drn_d_22_cityscapes.pth
+--step 100 --pretrained pretrained/drn_d_22_cityscapes.pth --resume drn_d_22_checkpoint_latest.pth
