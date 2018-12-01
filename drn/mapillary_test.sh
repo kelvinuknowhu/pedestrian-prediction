@@ -6,4 +6,4 @@ conda activate pytorch
 
 python segment.py test --data-dir /scratch/datasets/mapillary --classes 2 \
 --arch drn_d_38 --pretrained pretrained/mapillary_model_best.pth \
---phase test --batch-size 1
+--phase test --batch-size 1 --with-gt
