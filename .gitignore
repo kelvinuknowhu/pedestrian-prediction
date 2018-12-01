@@ -9,6 +9,9 @@ drn/datasets/mapillary/testing/
 drn/drn_d_22_000_test/
 drn/drn_d_22_000_test_color/
 
+JAAD/clips/
+JAAD/pedestrian_dataset_folds/
+
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
 *.py[cod]
