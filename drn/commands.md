@@ -24,5 +24,8 @@ sbatch --job-name=bdd --output=bdd.o%j --nodelist=harpo --partition=kilian --req
 
 sbatch --job-name=bdd --output=bdd.o%j --nodelist=nikola-compute02 --partition=default_gpu --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G bdd_fine_tune.sh
 
+# Train on Mapillary crosswalk
 sbatch --job-name=mapillary --output=mapillary.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G mapillary_fine_tune.sh
 
+# Test on Mapillary crosswalk
+sbatch --job-name=test_mapillary --output=test_mapillary.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G mapillary_test.sh

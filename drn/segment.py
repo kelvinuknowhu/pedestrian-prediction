@@ -531,7 +531,7 @@ def test(eval_data_loader, model, num_classes,
     # Validation
     if has_gt:
         ious = per_class_iu(hist) * 100
-        logger.info(' '.join('{:.03f}'.format(i) for i in ious))
+        logger.info(' '.join('{:.3f}'.format(i) for i in ious))
         return round(np.nanmean(ious), 2)
 
 
@@ -703,7 +703,7 @@ def test_seg(args):
     else:
         mAP = test(test_loader, model, args.classes, save_vis=True,
                    has_gt=phase != 'test' or args.with_gt, output_dir=out_dir)
-    logger.info('mAP: %f', mAP)
+    logger.info('mAP: {:.3f}'.format(mAP))
 
 
 def parse_args():
