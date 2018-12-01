@@ -99,18 +99,34 @@ labels = [
     Label(name='Unlabeled',                id=65, trainId=1,  hasInstances=False,  color=(0, 0, 0)),
 ]
 
-def prepare_mapillary_training(label_dir, out_dir):
+def prepare_mapillary_training(label_dir, out_dir, out_color_dir):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
+    if not os.path.exists(out_color_dir):
+        os.makedirs(out_color_dir)
     length = len(os.listdir(label_dir))
     count = 0
+    DUO_PALETTE = np.array([[217, 83, 79], [0, 0, 0]], dtype=np.uint8)
     for i, file_name in enumerate(os.listdir(label_dir)):
         image = np.array(Image.open(os.path.join(label_dir, file_name)))
-        if is_valid(image):
+
+        if is_valid(image):      
+            # Save id maps
             id_map = label_to_train_id(image)
             out_path = os.path.join(out_dir, file_name)
+            
+            # Save color maps
+            color_map = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
+            color_map[id_map == 0] = DUO_PALETTE[0]
+            color_map[id_map == 1] = DUO_PALETTE[1]
+            color_map = Image.fromarray(color_map)
+            out_color_path = os.path.join(out_color_dir, file_name)
+            
             print('({i}/{length}) Writing to {out_path}'.format(i=i+1, length=length, out_path=out_path))
+            id_map = Image.fromarray(id_map)
             id_map.save(out_path)
+            color_map.save(out_color_path)
+
             count += 1
         else:
             print('({i}/{length}) Skipping'.format(i=i+1, length=length))
@@ -118,7 +134,7 @@ def prepare_mapillary_training(label_dir, out_dir):
 
 
 def is_valid(array):
-    threshold = 128
+    threshold = 2048
     num_pixels = np.sum(array == 0)
     return num_pixels > threshold
 
@@ -127,11 +143,12 @@ def label_to_train_id(array):
     out_array = np.empty_like(array)
     for l in labels:
         out_array[array == l.id] = l.trainId
-    return Image.fromarray(out_array)
+    return out_array
 
 
 if __name__ == "__main__":
     label_dirs = ['training/labels', 'validation/labels']
     out_dirs = ['training/train_ids', 'validation/train_ids']
+    out_color_dirs = ['training/train_ids_color', 'validation/train_ids_color']
     for i in range(len(label_dirs)):
-        prepare_mapillary_training(label_dirs[i], out_dirs[i])
+        prepare_mapillary_training(label_dirs[i], out_dirs[i], out_color_dirs[i])

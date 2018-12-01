@@ -68,6 +68,9 @@ TRIPLET_PALETTE = np.asarray([
     [217, 83, 79, 255],
     [91, 192, 222, 255]], dtype=np.uint8)
 
+DUO_PALETTE = np.asarray([
+    [217, 83, 79, 255],
+    [0, 0, 0, 255]], dtype=np.uint8)
 
 def fill_up_weights(up):
     w = up.weight.data
@@ -513,7 +516,7 @@ def test(eval_data_loader, model, num_classes,
                 save_output_images(pred, name, output_dir)
                 save_colorful_images(
                     pred, name, output_dir + '_color',
-                    TRIPLET_PALETTE if num_classes == 3 else CITYSCAPE_PALETTE)
+                    DUO_PALETTE if num_classes == 2 else CITYSCAPE_PALETTE)
             if has_gt:
                 label = label.numpy()
                 hist += fast_hist(pred.flatten(), label.flatten(), num_classes)
