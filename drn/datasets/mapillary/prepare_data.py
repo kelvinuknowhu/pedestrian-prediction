@@ -134,7 +134,7 @@ def prepare_mapillary_training(label_dir, out_dir, out_color_dir):
 
 
 def is_valid(array):
-    threshold = 2048
+    threshold = 512
     num_pixels = np.sum(array == 0)
     return num_pixels > threshold
 
