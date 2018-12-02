@@ -231,12 +231,13 @@ if __name__ == '__main__':
         data_transforms.ToTensor()
     ])
 
-    for video_id in frames_dict:
+    for video_id in sorted(frames_dict):
         video_name = os.path.join('clips', video_id + '.mp4')
         images = get_video_frames(video_name, frames_dict[video_id])
 
         for i, image in enumerate(images):
             image_name = names_dict[video_id][i]
+            logger.info(image_name)
             # Swap image from (H, W, C) to (C, H, W)
             image = np.transpose(image, axes=(2, 0, 1))
             # Make batch size 1
