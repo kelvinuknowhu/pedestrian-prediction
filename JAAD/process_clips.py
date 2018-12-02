@@ -8,6 +8,8 @@ import time
 import json
 import os
 import cv2
+import sys
+import logging
 
 import drn
 import data_transforms
@@ -34,6 +36,13 @@ CITYSCAPE_PALETTE = np.asarray([
     [119, 11, 32],
     [0, 0, 0]], dtype=np.uint8)
 
+FORMAT = "[%(asctime)-15s %(filename)s:%(lineno)d %(funcName)s] %(message)s"
+logging.basicConfig(format=FORMAT)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+sh = logging.StreamHandler(stream=sys.stdout)
+sh.setLevel(logging.DEBUG)
+logger.addHandler(sh)
 
 class DRNSeg(nn.Module):
     def __init__(self, model_name, classes, pretrained_model=None, pretrained=True, use_torch_up=False):
@@ -144,7 +153,7 @@ def test(image, model, num_classes, name, output_dir='prediction', save_vis=True
             save_output_image(pred, name, output_dir)
             save_colorful_image(pred, name, output_dir + '_color', CITYSCAPE_PALETTE)
         end = time.time()
-        print('Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+        logger.info('Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
               'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
               .format(batch_time=batch_time, data_time=data_time))
 
@@ -214,7 +223,7 @@ if __name__ == '__main__':
     if torch.cuda.is_available():
         model.load_state_dict(state_dict)
     else:
-        print("CUDA not available!")
+        logger.warning("CUDA not available!\n")
         model.load_state_dict(state_dict)
 
     # Transformations that need to be performed on input image
@@ -226,7 +235,6 @@ if __name__ == '__main__':
         video_name = os.path.join('clips', video_id + '.mp4')
         images = get_video_frames(video_name, frames_dict[video_id])
 
-
         for i, image in enumerate(images):
             image_name = names_dict[video_id][i]
             # Swap image from (H, W, C) to (C, H, W)
@@ -235,7 +243,5 @@ if __name__ == '__main__':
             image = np.expand_dims(image, axis=0)
             # Turn numpy array into tensor
             image = transforms(image)[0]
-            print(image_name, image.size())
             test(image, model, classes, image_name)
-            break
     
