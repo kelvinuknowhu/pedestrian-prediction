@@ -97,7 +97,7 @@ class DRNSeg(nn.Module):
 
         self.seg = nn.Conv2d(model.out_dim, classes,
                              kernel_size=1, bias=True)
-        self.softmax = nn.LogSoftmax()
+        self.softmax = nn.LogSoftmax(dim=1)
         m = self.seg
         n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
         m.weight.data.normal_(0, math.sqrt(2. / n))
@@ -509,7 +509,7 @@ def test(eval_data_loader, model, num_classes,
         with torch.no_grad():
             image_var = Variable(image, requires_grad=False)
             final = model(image_var)[0]
-            _, pred = torch.max(final, 1)
+            _, pred = torch.max(final, dim=1)
             pred = pred.cpu().data.numpy()
             batch_time.update(time.time() - end)
             if save_vis:
