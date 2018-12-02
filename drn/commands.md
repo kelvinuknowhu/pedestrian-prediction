@@ -29,3 +29,6 @@ sbatch --job-name=mapillary --output=mapillary.o%j --nodelist=hinton --partition
 
 # Test on Mapillary crosswalk
 sbatch --job-name=test_mapillary --output=test_mapillary.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G mapillary_test.sh
+
+# Generate segmentation masks on JAAD
+sbatch --job-name=jaad --output=jaad.o%j --nodelist=hinton --partition=cuvl --requeue --cpus-per-task=2 --gres=gpu:2 --mem=64G process_clips.sh
