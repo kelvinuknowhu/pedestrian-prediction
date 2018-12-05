@@ -206,9 +206,12 @@ def get_dicts():
 if __name__ == '__main__':
 
     fold_dict, frames_dict, names_dict = get_dicts()
-    arch = 'drn_d_38'
     classes = 19
+    arch = 'drn_d_38'
     pretrained = 'pretrained/drn_d_38_cityscapes.pth'
+    # arch = 'drn_d_22'
+    # pretrianed = 'pretrained/drn_d_22_cityscapes_and_bdd.pth'
+    clips_dir = '/scratch/datasets/JAAD_clips'
 
     # Load the DRN model
     model = DRNSeg(arch, classes, pretrained_model=None, pretrained=True)
@@ -232,7 +235,7 @@ if __name__ == '__main__':
     ])
 
     for video_id in sorted(frames_dict):
-        video_name = os.path.join('clips', video_id + '.mp4')
+        video_name = os.path.join(clips_dir, video_id + '.mp4')
         images = get_video_frames(video_name, frames_dict[video_id])
 
         for i, image in enumerate(images):

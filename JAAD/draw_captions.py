@@ -82,26 +82,29 @@ def get_video_frames(video_name, frames):
 if __name__ == '__main__':
 
     fold_dict, frames_dict, names_dict = get_dicts()    
+    clips_dir = '/scratch/datasets/JAAD_clips'
+    overlayed_dir = '/scratch/datasets/JAAD/overlayed'
+    # clips_dir = 'clips'
+    # overlayed_dir = 'overlayed'
 
-    video_id = 'video_0001'
-    video_name = os.path.join('clips', video_id + '.mp4')
-    frames = frames_dict[video_id]
-    images = get_video_frames(video_name, frames)
+    for video_id in frames_dict:
+        print(video_id)
+        video_name = os.path.join(clips_dir, video_id + '.mp4')
+        frames = frames_dict[video_id]
+        images = get_video_frames(video_name, frames)
 
-    predictions_dict = {}    
-    # Create fake predictions
-    for frame in frames:
-        if frame not in predictions_dict:
-            predictions_dict[frame] = {}
-        predictions_dict[frame]['labels'] = [0, 1, 0]
-        predictions_dict[frame]['bbox'] = [[100, 100, 200, 200], [400, 400, 500, 500], [600, 600, 700, 700]]
+        with open('ground_truth_dict.json', 'r') as f:
+            ground_truth_dict = json.load(f)
+        
 
-    for i, image in enumerate(images):
-        frame = frames[i]
-        overlayed_image = overlay_predictions(image, predictions_dict[frame])
-        out_dir = os.path.join('overlayed', video_id)
-        if not os.path.exists(out_dir):
-            os.makedirs(out_dir)
-        overlayed_path = os.path.join(out_dir, str(frame) + '.png')        
-        Image.fromarray(overlayed_image).save(overlayed_path)
+        predictions_dict = ground_truth_dict[video_id]
+
+        for i, image in enumerate(images):
+            frame = frames[i]
+            overlayed_image = overlay_predictions(image, predictions_dict[str(frame)])
+            out_dir = os.path.join(overlayed_dir, video_id)
+            if not os.path.exists(out_dir):
+                os.makedirs(out_dir)
+            overlayed_path = os.path.join(out_dir, str(frame) + '.png')        
+            Image.fromarray(overlayed_image).save(overlayed_path)
 
