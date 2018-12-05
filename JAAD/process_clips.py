@@ -208,7 +208,7 @@ if __name__ == '__main__':
     # arch = 'drn_d_38'
     # pretrained = 'pretrained/drn_d_38_cityscapes.pth'
     arch = 'drn_d_22'
-    pretrianed = 'pretrained/drn_d_22_cityscapes_and_bdd.pth'
+    pretrained = 'pretrained/drn_d_22_cityscapes_and_bdd.pth'
     clips_dir = '/scratch/datasets/JAAD_clips'
 
     # Load the DRN model
