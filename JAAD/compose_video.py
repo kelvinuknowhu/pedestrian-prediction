@@ -13,10 +13,10 @@ def write_video(video_path, image_dir, width=1920, height=1080):
     video.release()
 
 if __name__ == '__main__':
-    # in_dir = 'overlayed'
-    # out_dir = 'overlayed_video'
-    in_dir = '/scratch/datasets/JAAD/overlayed'
-    out_dir = '/scratch/datasets/JAAD/overlayed_video'
+    in_dir = 'overlayed'
+    out_dir = 'overlayed_video'
+    # in_dir = '/scratch/datasets/JAAD/overlayed'
+    # out_dir = '/scratch/datasets/JAAD/overlayed_video'
     if not os.path.exists(out_dir):
         os.path.mkdirs(out_dir)
     for video_id in os.listdir(in_dir):

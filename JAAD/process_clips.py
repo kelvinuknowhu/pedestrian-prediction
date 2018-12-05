@@ -128,14 +128,14 @@ def save_colorful_image(pred, filename, output_dir, palette):
     """
     Saves a given (C x H x W) into an image file.
     """
-    im = Image.fromarray(palette[pred.squeeze()])
+    im = Image.fromarray(palette[pred])
     fn = os.path.join(output_dir, filename + '.png')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     im.save(fn)
 
 
-def test(image, model, num_classes, name, output_dir='prediction', save_vis=True):
+def test(image, model, num_classes, name, output_dir='prediction_fine_tune', save_vis=True):
     model.eval()
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -153,9 +153,7 @@ def test(image, model, num_classes, name, output_dir='prediction', save_vis=True
             save_output_image(pred, name, output_dir)
             save_colorful_image(pred, name, output_dir + '_color', CITYSCAPE_PALETTE)
         end = time.time()
-        logger.info('Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-              'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-              .format(batch_time=batch_time, data_time=data_time))
+        logger.info('Time: {batch_time.val:.3f}'.format(batch_time=batch_time))
 
 
 def get_video_frames(video_name, frames):
@@ -207,10 +205,10 @@ if __name__ == '__main__':
 
     fold_dict, frames_dict, names_dict = get_dicts()
     classes = 19
-    arch = 'drn_d_38'
-    pretrained = 'pretrained/drn_d_38_cityscapes.pth'
-    # arch = 'drn_d_22'
-    # pretrianed = 'pretrained/drn_d_22_cityscapes_and_bdd.pth'
+    # arch = 'drn_d_38'
+    # pretrained = 'pretrained/drn_d_38_cityscapes.pth'
+    arch = 'drn_d_22'
+    pretrianed = 'pretrained/drn_d_22_cityscapes_and_bdd.pth'
     clips_dir = '/scratch/datasets/JAAD_clips'
 
     # Load the DRN model
