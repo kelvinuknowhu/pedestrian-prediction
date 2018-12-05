@@ -160,7 +160,7 @@ def test(image, model, num_classes, name, output_dir='prediction', save_vis=True
 
 def get_video_frames(video_name, frames):
     video = cv2.VideoCapture(video_name)
-    i = 1
+    i = 0
     while True:
         ret, img = video.read()
         if not ret:
