@@ -13,5 +13,5 @@ def reorganize_mask_dir(mask_dir):
         new_file_path = os.path.join(dir_path, new_filename)
         shutil.move(file_path, new_file_path)
 
-if if __name__ == "__main__":
-    reorganize_mask_dir('/scratch/datasets/JAAD/predictions')
+if __name__ == "__main__":
+    reorganize_mask_dir('/scratch/datasets/JAAD/prediction')
