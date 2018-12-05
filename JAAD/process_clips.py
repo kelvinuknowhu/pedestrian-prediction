@@ -246,4 +246,5 @@ if __name__ == '__main__':
             # Turn numpy array into tensor
             image = transforms(image)[0]
             test(image, model, classes, image_name)
+            break
     
