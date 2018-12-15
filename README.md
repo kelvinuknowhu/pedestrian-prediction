@@ -1,1 +1,2 @@
 # Pedestrian Prediction
+The repo is used for the pedestrian prediction project as well as the final project of CS 6670 Computer Vision under the supervision of Dr. Wei-Lun Chao and Prof. Bharath Hariharan.
